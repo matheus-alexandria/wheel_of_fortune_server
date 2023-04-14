@@ -10,6 +10,12 @@ app.get("/", (request, response) => {
   response.send();
 });
 
+app.post("/", (request, response) => {
+  const { name, options } = request.body;
+
+  response.json({ name, options });
+});
+
 app.listen(3333, () => {
   console.log("Server running");
 });
