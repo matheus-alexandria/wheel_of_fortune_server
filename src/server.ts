@@ -1,9 +1,12 @@
 import express from "express";
 import cors from "cors";
+import { createObjectCsvWriter } from "csv-writer";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+const createCsvWriter = createObjectCsvWriter;
 
 app.get("/", (request, response) => {
   console.log("Route");
@@ -13,10 +16,19 @@ app.get("/", (request, response) => {
 app.post("/", (request, response) => {
   const { name, options } = request.body;
 
-  response.json({ name, options });
+  const csvWriter = createCsvWriter({
+    path: `/home/matheus/Documents/projetos/rouletteOnline/server/temp/${name}.csv`,
+    header: [
+      { id: 'title', title: 'Title'},
+      { id: 'weight', title: 'Weight'},
+    ]
+  });
+
+  csvWriter.writeRecords(options).then();
+
+  response.send();
 });
 
 app.listen(3333, () => {
   console.log("Server running");
 });
-
