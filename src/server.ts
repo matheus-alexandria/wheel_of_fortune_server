@@ -3,14 +3,26 @@ import cors from "cors";
 import { createObjectCsvWriter } from "csv-writer";
 import "dotenv/config";
 
+interface OptionsData {
+  name: string;
+  options: {
+    title: string;
+    weight: number;
+  }[]
+}
+
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 app.post("/", (request, response) => {
-  const { name, options } = request.body;
+  const { name, options }: OptionsData = request.body;
   const path = process.env.CSV_FILES_PATH || '';
   const fileName = `${name}.csv`;
+
+  if (options.length <= 0) {
+    response.status(500).send("Data with no options to save");
+  }
 
   const csvWriter = createObjectCsvWriter({
     path: `${path}${fileName}`,
