@@ -7,7 +7,7 @@ interface OptionsData {
   name: string;
   options: {
     title: string;
-    weight: number;
+    percentage: number;
   }[]
 }
 
@@ -28,7 +28,7 @@ app.post("/", (request, response) => {
     path: `${path}${fileName}`,
     header: [
       { id: 'title', title: 'Title'},
-      { id: 'weight', title: 'Weight'},
+      { id: 'percentage', title: 'Percentage'},
     ]
   });
 
