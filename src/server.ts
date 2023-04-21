@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import { createObjectCsvWriter } from "csv-writer";
 import "dotenv/config";
+import multer from "multer";
+import { parseCSVOptions } from "./useCases/parseCSVOptionsUseCase";
 
 interface OptionsData {
   name: string;
@@ -14,6 +16,10 @@ interface OptionsData {
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+const uploader = multer({
+  dest: "./temp/upload"
+});
 
 app.post("/export", (request, response) => {
   const { name, options }: OptionsData = request.body;
@@ -46,8 +52,16 @@ app.post("/export", (request, response) => {
     });
 });
 
-app.post("/import", (request, response) => {
-  
+app.post("/import", uploader.single('file'), async (request, response) => {
+  const { file } = request;
+
+  if (!file) {
+    return response.status(400).send("The file could not be read or does not exist");
+  }
+
+  const options = await parseCSVOptions(file);
+
+  return response.status(201).json(options);
 });
 
 app.listen(3333, () => {
