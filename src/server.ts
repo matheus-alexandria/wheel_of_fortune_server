@@ -15,7 +15,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.post("/", (request, response) => {
+app.post("/export", (request, response) => {
   const { name, options }: OptionsData = request.body;
   const path = process.env.CSV_FILES_PATH || '';
   const fileName = `${name}.csv`;
@@ -29,7 +29,8 @@ app.post("/", (request, response) => {
     header: [
       { id: 'title', title: 'Title'},
       { id: 'percentage', title: 'Percentage'},
-    ]
+    ],
+    fieldDelimiter: ";"
   });
 
   csvWriter
@@ -37,12 +38,16 @@ app.post("/", (request, response) => {
     .then(() => {
       response.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
       response.setHeader('Content-Type', 'text/csv');
-      response.sendFile(`/home/matheus/Documents/projetos/rouletteOnline/server/temp/${fileName}`);
+      response.sendFile(`${path}${fileName}`);
     })
     .catch((error) => {
       console.log('Error creating and sending the CSV file: ', error);
       response.status(500).send('Internal Server Error');
     });
+});
+
+app.post("/import", (request, response) => {
+  
 });
 
 app.listen(3333, () => {
