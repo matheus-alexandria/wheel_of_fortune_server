@@ -3,7 +3,7 @@ import cors from "cors";
 import { createObjectCsvWriter } from "csv-writer";
 import "dotenv/config";
 import multer from "multer";
-import { parseCSVOptions } from "./useCases/parseCSVOptionsUseCase";
+import { ParseCSVOptions } from "./useCases/parseCSVOptionsUseCase";
 
 interface OptionsData {
   name: string;
@@ -59,7 +59,9 @@ app.post("/import", uploader.single('file'), async (request, response) => {
     return response.status(400).send("The file could not be read or does not exist");
   }
 
-  const options = await parseCSVOptions(file);
+  const parseCSVOptions = new ParseCSVOptions();
+
+  const options = await parseCSVOptions.execute(file);
 
   return response.status(201).json(options);
 });
