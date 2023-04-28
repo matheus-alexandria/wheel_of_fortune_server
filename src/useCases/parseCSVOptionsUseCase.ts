@@ -8,17 +8,13 @@ interface WheelOptions {
 }
 
 export class ParseCSVOptions {
-  private verifyType(file: Express.Multer.File, allowedTypes: string[]): Boolean {
-    const ext = extname(file.originalname).toLowerCase();
-    return allowedTypes.includes(ext);
-  }
+  // private verifyType(file: Express.Multer.File, allowedTypes: string[]): Boolean {
+  //   const ext = extname(file.originalname).toLowerCase();
+  //   return allowedTypes.includes(ext);
+  // }
 
   async execute(file: Express.Multer.File): Promise<WheelOptions[]> {
     return new Promise((resolve, reject) => {
-      if (!this.verifyType(file, [".csv"])) {
-        reject("Type not allowed");
-      }
-      console.log("Aqui");
 
       const stream = fs.createReadStream(file.path);
       const options: WheelOptions[] = [];
@@ -36,7 +32,7 @@ export class ParseCSVOptions {
 
           options.push({
             title,
-            percentage
+            percentage: Number(percentage)
           });
         })
         .on("end", () => {

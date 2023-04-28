@@ -64,10 +64,10 @@ app.post("/import", uploader.single('file'), async (request, response) => {
   const options = await parseCSVOptions.execute(file)
     .catch((err) => {
       console.log(err);
-      return response.status(400).json({ message: err });
+      return response.status(400).send({ message: err });
     });
 
-  return response.status(201).json(options);
+  return response.status(200).json(options);
 });
 
 app.listen(3333, () => {
