@@ -1,9 +1,9 @@
-import express from "express";
-import cors from "cors";
-import { createObjectCsvWriter } from "csv-writer";
-import "dotenv/config";
-import multer from "multer";
-import { ParseCSVOptions } from "./useCases/parseCSVOptionsUseCase";
+import express from 'express';
+import cors from 'cors';
+import { createObjectCsvWriter } from 'csv-writer';
+import 'dotenv/config';
+import multer from 'multer';
+import { ParseCSVOptions } from './useCases/parseCSVOptionsUseCase';
 
 interface OptionsData {
   name: string;
@@ -18,25 +18,25 @@ app.use(cors());
 app.use(express.json());
 
 const uploader = multer({
-  dest: "./temp/upload"
+  dest: './temp/upload',
 });
 
-app.post("/export", (request, response) => {
+app.post('/export', (request, response) => {
   const { name, options }: OptionsData = request.body;
   const path = process.env.CSV_FILES_PATH || '';
   const fileName = `${name}.csv`;
 
   if (options.length <= 0) {
-    response.status(500).send("Data with no options to save");
+    response.status(500).send('Data with no options to save');
   }
 
   const csvWriter = createObjectCsvWriter({
     path: `${path}${fileName}`,
     header: [
-      { id: 'title', title: 'Title'},
-      { id: 'percentage', title: 'Percentage'},
+      { id: 'title', title: 'Title' },
+      { id: 'percentage', title: 'Percentage' },
     ],
-    fieldDelimiter: ";"
+    fieldDelimiter: ';',
   });
 
   csvWriter
@@ -52,11 +52,11 @@ app.post("/export", (request, response) => {
     });
 });
 
-app.post("/import", uploader.single('file'), async (request, response) => {
+app.post('/import', uploader.single('file'), async (request, response) => {
   const { file } = request;
 
   if (!file) {
-    return response.status(400).send("The file could not be read or does not exist");
+    return response.status(400).send('The file could not be read or does not exist');
   }
 
   const parseCSVOptions = new ParseCSVOptions();
@@ -71,5 +71,5 @@ app.post("/import", uploader.single('file'), async (request, response) => {
 });
 
 app.listen(3333, () => {
-  console.log("Server running");
+  console.log('Server running');
 });
