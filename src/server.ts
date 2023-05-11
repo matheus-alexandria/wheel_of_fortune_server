@@ -21,6 +21,8 @@ const uploader = multer({
   dest: './temp/upload',
 });
 
+app.get('/healthcheck', (req, res) => res.json({ message: 'Server online' }));
+
 app.post('/export', (request, response) => {
   const { name, options }: OptionsData = request.body;
   const path = process.env.CSV_FILES_PATH || '';
