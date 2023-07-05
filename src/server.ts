@@ -1,8 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import { createObjectCsvWriter } from 'csv-writer';
-import 'dotenv/config';
 import multer from 'multer';
+import { env } from './env';
 import { ParseCSVOptions } from './useCases/parseCSVOptionsUseCase';
 
 interface OptionsData {
@@ -25,7 +25,7 @@ app.get('/healthcheck', (req, res) => res.json({ message: 'Server online' }));
 
 app.post('/export', (request, response) => {
   const { name, options }: OptionsData = request.body;
-  const path = process.env.CSV_FILES_PATH || '';
+  const path = env.CSV_FILES_PATH || '';
   const fileName = `${name}.csv`;
 
   if (options.length <= 0) {
@@ -72,6 +72,6 @@ app.post('/import', uploader.single('file'), async (request, response) => {
   return response.status(200).json(options);
 });
 
-app.listen(3333, () => {
+app.listen(env.PORT, () => {
   console.log('Server running');
 });
