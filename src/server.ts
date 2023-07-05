@@ -61,9 +61,9 @@ app.post('/import', uploader.single('file'), async (request, response) => {
     return response.status(400).send('The file could not be read or does not exist');
   }
 
-  const parseCSVOptions = new ParseCSVOptions();
+  // const parseCSVOptions = new ParseCSVOptions();
 
-  const options = await parseCSVOptions.execute(file)
+  const options = await ParseCSVOptions.execute(file)
     .catch((err) => {
       console.log(err);
       return response.status(400).send({ message: err });

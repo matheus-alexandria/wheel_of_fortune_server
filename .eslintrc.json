@@ -17,6 +17,7 @@
     ],
     "rules": {
       "import/no-unresolved": "error",
+      "import/prefer-default-export": ["off"],
       "@typescript-eslint/naming-convention": [
         "error",
         {
