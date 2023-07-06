@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { createObjectCsvWriter } from 'csv-writer';
 import multer from 'multer';
+import { z } from 'zod';
 import { env } from './env';
 import { ParseCSVOptions } from './useCases/parseCSVOptionsUseCase';
 
@@ -24,7 +25,13 @@ const uploader = multer({
 app.get('/healthcheck', (req, res) => res.json({ message: 'Server online' }));
 
 app.post('/export', (request, response) => {
-  const { name, options }: OptionsData = request.body;
+  const bodySchema = z.object({
+    name: z.string().default('no-name-sent'),
+    options: z.any(),
+  });
+
+  const { name, options } = bodySchema.parse(request.body);
+  // const { name, options }: OptionsData = request.body;
   const path = env.CSV_FILES_PATH || '';
   const fileName = `${name}.csv`;
 
