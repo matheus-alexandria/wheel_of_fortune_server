@@ -25,13 +25,17 @@ const uploader = multer({
 app.get('/healthcheck', (req, res) => res.json({ message: 'Server online' }));
 
 app.post('/export', (request, response) => {
+  const optionSchema = z.object({
+    title: z.string(),
+    percentage: z.number(),
+  });
+
   const bodySchema = z.object({
     name: z.string().default('no-name-sent'),
-    options: z.any(),
+    options: z.array(optionSchema),
   });
 
   const { name, options } = bodySchema.parse(request.body);
-  // const { name, options }: OptionsData = request.body;
   const path = env.CSV_FILES_PATH || '';
   const fileName = `${name}.csv`;
 
@@ -67,8 +71,6 @@ app.post('/import', uploader.single('file'), async (request, response) => {
   if (!file) {
     return response.status(400).send('The file could not be read or does not exist');
   }
-
-  // const parseCSVOptions = new ParseCSVOptions();
 
   const options = await ParseCSVOptions.execute(file)
     .catch((err) => {
