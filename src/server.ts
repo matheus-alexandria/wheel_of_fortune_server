@@ -31,11 +31,18 @@ app.post('/export', (request, response) => {
   });
 
   const bodySchema = z.object({
-    name: z.string().default('no-name-sent'),
+    name: z.coerce.string().default('no-name-sent'),
     options: z.array(optionSchema),
   });
 
-  const { name, options } = bodySchema.parse(request.body);
+  const bodyParsed = bodySchema.safeParse(request.body);
+
+  if (bodyParsed.success === false) {
+    console.log(bodyParsed.error.format());
+    throw new Error('Data type error');
+  }
+
+  const { name, options } = bodyParsed.data;
   const path = env.CSV_FILES_PATH || '';
   const fileName = `${name}.csv`;
 
