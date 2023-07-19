@@ -3,6 +3,7 @@ import cors from 'cors';
 import { createObjectCsvWriter } from 'csv-writer';
 import multer from 'multer';
 import { z } from 'zod';
+import fs from 'fs/promises';
 import { env } from './env';
 import { ParseCSVOptions } from './useCases/parseCSVOptionsUseCase';
 
@@ -89,5 +90,5 @@ app.post('/import', uploader.single('file'), async (request, response) => {
 });
 
 app.listen(env.PORT, () => {
-  console.log('Server running');
+  console.log('Wheel of Fortune server online');
 });

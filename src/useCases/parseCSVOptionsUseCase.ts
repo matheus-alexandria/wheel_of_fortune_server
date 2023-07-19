@@ -16,6 +16,7 @@ export class ParseCSVOptions {
   static async execute(file: Express.Multer.File): Promise<WheelOptions[]> {
     return new Promise((resolve, reject) => {
       const stream = fs.createReadStream(file.path);
+      console.log(file.path);
       const options: WheelOptions[] = [];
 
       const parseFile = parse({
