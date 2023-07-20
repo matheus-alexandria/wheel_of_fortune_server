@@ -3,17 +3,9 @@ import cors from 'cors';
 import { createObjectCsvWriter } from 'csv-writer';
 import multer from 'multer';
 import { z } from 'zod';
-import fs from 'fs/promises';
+import { join } from 'path';
 import { env } from './env';
 import { ParseCSVOptions } from './useCases/parseCSVOptionsUseCase';
-
-interface OptionsData {
-  name: string;
-  options: {
-    title: string;
-    percentage: number;
-  }[]
-}
 
 const app = express();
 app.use(cors());
@@ -44,8 +36,8 @@ app.post('/export', (request, response) => {
   }
 
   const { name, options } = bodyParsed.data;
-  const path = env.CSV_FILES_PATH || '';
   const fileName = `${name}.csv`;
+  const path = join(__dirname, '..', '/temp/');
 
   if (options.length <= 0) {
     response.status(500).send('Data with no options to save');
