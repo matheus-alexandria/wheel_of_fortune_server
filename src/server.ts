@@ -3,7 +3,7 @@ import cors from 'cors';
 import { createObjectCsvWriter } from 'csv-writer';
 import multer from 'multer';
 import { z } from 'zod';
-import { join } from 'path';
+import { join } from 'node:path';
 import { env } from './env';
 import { ParseCSVOptions } from './useCases/parseCSVOptionsUseCase';
 
