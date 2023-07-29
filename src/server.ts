@@ -70,7 +70,14 @@ app.post('/export', (request, response) => {
 
 app.delete('/files', (request, response) => {
   const { path } = request.body;
-  fs.unlinkSync(`${path}/Teste_enviar_envs.csv`);
+  fs.readdir(path, (err, files) => {
+    if (err) throw err;
+
+    for (const file of files) {
+      fs.unlinkSync(join(path, file));
+    }
+  });
+  // fs.unlinkSync(`${path}/Teste_enviar_envs.csv`);
 
   return response.send();
 });
