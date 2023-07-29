@@ -4,6 +4,7 @@ import { createObjectCsvWriter } from 'csv-writer';
 import multer from 'multer';
 import { z } from 'zod';
 import { join } from 'node:path';
+import fs from 'node:fs';
 import { env } from './env';
 import { ParseCSVOptions } from './useCases/parseCSVOptionsUseCase';
 
@@ -40,7 +41,7 @@ app.post('/export', (request, response) => {
   const path = join(__dirname, '..', '/temp/');
 
   if (options.length <= 0) {
-    response.status(500).send('Data with no options to save');
+    response.status(400).send('Data with no options to save');
   }
 
   const csvWriter = createObjectCsvWriter({
@@ -51,6 +52,8 @@ app.post('/export', (request, response) => {
     ],
     fieldDelimiter: ';',
   });
+
+  console.log(path);
 
   csvWriter
     .writeRecords(options)
@@ -63,6 +66,13 @@ app.post('/export', (request, response) => {
       console.log('Error creating and sending the CSV file: ', error);
       response.status(500).send('Internal Server Error');
     });
+});
+
+app.delete('/files', (request, response) => {
+  const { path } = request.body;
+  fs.unlinkSync(`${path}/Teste_enviar_envs.csv`);
+
+  return response.send();
 });
 
 app.post('/import', uploader.single('file'), async (request, response) => {
